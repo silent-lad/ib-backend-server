@@ -5,6 +5,8 @@ const bodyParser = require("body-parser");
 
 const app = express();
 
+app.set("port", process.env.PORT || 8080);
+
 app.use(bodyParser.json());
 app.use(logger);
 
@@ -12,6 +14,6 @@ app.get("/", (req, res) => {
   res.send("test");
 });
 
-app.listen(3000, () => {
-  console.log("Listening at port 3000");
+app.listen(app.get("port"), () => {
+  console.log("Listeneing at port 8080");
 });
