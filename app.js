@@ -82,41 +82,43 @@ app.post("/interview", (req, res) => {
       if (results.length == 0) {
         connection.query(
           `SELECT * FROM sql12361367.INTERVIEW
-            WHERE (T.start_time>${req.body.start_time} AND T.start_time<${req.body.end_time}) 
-            OR (T.end_time>${req.body.start_time} AND T.end_time<${req.body.end_time}) ;`,
+            WHERE (start_time>${req.body.start_time} AND start_time<${req.body.end_time}) 
+            OR (end_time>${req.body.start_time} AND end_time<${req.body.end_time}) ;`,
 
           function (error, results) {
             if (!error) {
               if (results.length == 0) {
                 connection.query(
                   `INSERT INTO sql12361367.INTERVIEW (start_time, end_time, user_id) 
-                    values(${req.body.start_time},${req.body.end_time},${req.body.user_id});`,
+                    values(${req.body.start_time},${req.body.end_time},${req.body.user_id})`,
                   function (error, results) {
                     if (error) {
+                      console.log(error);
                       res.status(500).json(error);
                     } else {
-                      var interview_id = 1;
                       var sql =
-                        "INSERT INTO SCHEDULE (candidate_id, interview_id) VALUES ?";
+                        "INSERT INTO sql12361367.SCHEDULE (candidate_id, interview_id) VALUES ?";
                       var values = req.body.candidates.map((candidate) => {
-                        return [candidate.candidate_id, req.body.user_id];
+                        return [candidate.candidate_id, results.insertId];
                       });
-
-                      conn.query(sql, [values], function (err) {
-                        if (err) throw err;
-                        conn.end();
+                      connection.query(sql, [values], function (err) {
+                        if (err) {
+                          res.statusCode(500).send("insert schedule fail");
+                        }
+                        connection.end();
+                        res.status(200).json(results);
                       });
-                      res.status(200).json(results);
                     }
                   }
                 );
               }
             } else {
+              res.send(500);
             }
           }
         );
       } else {
-        res.status(400).json(result);
+        res.status(400).json(results);
       }
     }
   );
