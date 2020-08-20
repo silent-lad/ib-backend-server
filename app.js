@@ -27,6 +27,20 @@ app.get("/candidates", (req, res) => {
   });
 });
 
+app.get("/users", (req, res) => {
+  connection.query("SELECT * FROM sql12361367.USER", function (
+    error,
+    results,
+    fields
+  ) {
+    if (error) {
+      res.status(500).json(error);
+    } else {
+      res.status(200).json(results);
+    }
+  });
+});
+
 app.get("/interview", (req, res) => {
   connection.query("SELECT * FROM sql12361367.INTERVIEW", function (
     error,
