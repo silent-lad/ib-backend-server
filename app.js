@@ -98,10 +98,9 @@ app.post("/interview", (req, res) => {
                       var interview_id = 1;
                       var sql =
                         "INSERT INTO SCHEDULE (candidate_id, interview_id) VALUES ?";
-                      var values = [
-                        [2, interview_id],
-                        [3, interview_id],
-                      ];
+                      var values = req.body.candidates.map((candidate) => {
+                        return [candidate.candidate_id, req.body.user_id];
+                      });
 
                       conn.query(sql, [values], function (err) {
                         if (err) throw err;
