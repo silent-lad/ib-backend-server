@@ -105,7 +105,6 @@ app.post("/interview", (req, res) => {
                         if (err) {
                           res.statusCode(500).send("insert schedule fail");
                         }
-                        connection.end();
                         res.status(200).json(results);
                       });
                     }
