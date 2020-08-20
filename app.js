@@ -35,7 +35,18 @@ app.get("/interview", (req, res) => {
     if (error) {
       res.status(500).json(error);
     } else {
-      res.status(200).json(results);
+      connection.query("SELECT * FROM sql12361367.SCHEDULE", function (
+        error,
+        schedule_results
+      ) {
+        if (!error) {
+          res
+            .status(200)
+            .json({ interviews: results, schedule: schedule_results });
+        } else {
+          res.status(500).json(error);
+        }
+      });
     }
   });
 });
