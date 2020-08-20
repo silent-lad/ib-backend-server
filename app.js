@@ -126,12 +126,14 @@ app.post("/interview", (req, res) => {
 
 // Updates interview time
 app.patch("/interview/:id", (req, res) => {
+  console.log(req.body.start_time, req.body.end_time);
   connection.query(
     `UPDATE sql12361367.INTERVIEW
-        SET start_time = ${req.body.start_time}, end_time = ${req.body.end_time},
-        WHERE interview_id=" + ${req.params.id};`,
+        SET start_time = ${req.body.start_time}, end_time = ${req.body.end_time}
+        WHERE interview_id = ${req.params.id};`,
     function (error, results, fields) {
       if (error) {
+        console.log(error);
         res.status(500).json(error);
       } else {
         res.status(200).json(results);
